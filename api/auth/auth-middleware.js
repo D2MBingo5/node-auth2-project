@@ -25,7 +25,7 @@ const restricted = (req, res, next) => {
   if (err) {
     next({ status: 401, message: 'Token invalid' })
   } else {
-    req.decodedJwt = decodedToken
+    req.decodedToken = decodedToken
     next()
   }
  })
@@ -42,7 +42,11 @@ const only = role_name => (req, res, next) => {
 
     Pull the decoded token from the req object, to avoid verifying it again!
   */
- next()
+ if (role_name === req.decodedToken.role_name) {
+   next()
+ } else {
+   next ({ status: 403, message: 'This is not for you' })
+ }
 }
 
 
